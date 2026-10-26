@@ -1,20 +1,96 @@
-﻿// mp2-lab3-stack.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
-//
+﻿#include <iostream>
 
-#include <iostream>
+template <typename T>
+class Stack {
+    int top_i, size;
+    T* pMem;
+public:
+    Stack(int _size = 1) : top_i(-1), size(_size) {
+        pMem = new T[size];
+    }
+    ~Stack() {
+        delete[] pMem;
+    }
 
-int main()
-{
-    std::cout << "Hello World!\n";
-}
+    Stack(const Stack& s) {
+        size = s.size;
+        top_i = s.top_i;
+        pMem = new T[size];
+        for (int i = 0; i < top_i; i++) {
+            pMem[i] = s.pMem[i];
+        }
+    }
 
-// Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
-// Отладка программы: F5 или меню "Отладка" > "Запустить отладку"
+    Stack(Stack&& s) noexcept: top_i(s.top_i), size(s.size), pMem(s.pMem) {
+        s.pMem = nullptr;
+        s.top_i = -1;
+        s.size = 0;
+    }
+    //конструктор перемещения, оператор присваиваня с перемещением самим
 
-// Советы по началу работы 
-//   1. В окне обозревателя решений можно добавлять файлы и управлять ими.
-//   2. В окне Team Explorer можно подключиться к системе управления версиями.
-//   3. В окне "Выходные данные" можно просматривать выходные данные сборки и другие сообщения.
-//   4. В окне "Список ошибок" можно просматривать ошибки.
-//   5. Последовательно выберите пункты меню "Проект" > "Добавить новый элемент", чтобы создать файлы кода, или "Проект" > "Добавить существующий элемент", чтобы добавить в проект существующие файлы кода.
-//   6. Чтобы снова открыть этот проект позже, выберите пункты меню "Файл" > "Открыть" > "Проект" и выберите SLN-файл.
+    Stack<T>& operator=(const Stack <T>& st) {
+        if (&st == this) {
+            if (this->size = st.size) {
+                size = st.size;
+                delete[] pMem;
+                pMem = new T[size];
+            }
+            top_i = st.top_i;
+            for (int i = 0; i < top_i; i++) {
+                pMem[i] = st.pMem[i];
+            }
+        }
+        return *this;
+    }
+
+    Stack& operator=(Stack&& st) noexcept {
+        if (this != &st) {
+            delete[] pMem;
+            pMem = st.pMem;
+            size = st.size;
+            top_i = st.top_i;
+            st.pMem = nullptr;
+            st.size = 0;
+            st.top_i = -1;
+        }
+        return *this;
+    }
+
+    bool operator==(const Stack <T>& st) {
+        if (size != st.size) return false;
+        if (top_i != st.top_i) return false;
+        for (int i = 0; i < top_i; i++) {
+            if (pMem[i] != st.pMem[i]) return false;
+        }
+        return true;
+    }
+
+    bool IsFull() {
+        return top_i == size - 1;
+    }
+    bool IsEmpty() {
+        return top_i == -1;
+    }
+
+    void Clear() {
+        top = -1;
+    }
+
+
+    void push(T el) {
+        if (IsFull()) { trow ""; }
+        else {
+            top_i++;
+            pMem[top_i] = el;
+        }
+    }
+
+    T pop() {
+        //исключение
+        if (IsEmpty) { throw ""; }
+        else {
+            top_i--;
+            return pMem[top_i + 1];
+        }
+    }
+};
