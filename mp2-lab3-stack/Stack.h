@@ -88,7 +88,7 @@ public:
 
 
     void push(T el) {
-        if (IsFull()) { trow "Stack is full"; }
+        if (IsFull()) { trow "Стек полный"; }
         else {
             top_i++;
             pMem[top_i] = el;
@@ -96,7 +96,7 @@ public:
     }
 
     T pop() {
-        if (IsEmpty) { throw "Stack is empty"; }
+        if (IsEmpty) { throw "Стек пуст"; }
         else {
             top_i--;
             return pMem[top_i + 1];
