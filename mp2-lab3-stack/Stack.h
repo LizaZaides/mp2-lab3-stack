@@ -96,10 +96,14 @@ public:
     }
 
     T pop() {
-        if (IsEmpty) { throw "Стек пуст"; }
+        if (IsEmpty()) { throw "Стек пуст"; }
         else {
             top_i--;
             return pMem[top_i + 1];
         }
+    }
+
+    T Top() {
+        return pMem[top_i];
     }
 };
