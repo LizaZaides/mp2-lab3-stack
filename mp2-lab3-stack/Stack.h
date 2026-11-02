@@ -83,12 +83,12 @@ public:
     }
 
     void Clear() noexcept {
-        top = -1;
+        top_i = -1;
     }
 
 
     void push(T el) {
-        if (IsFull()) { trow "Стек полный"; }
+        if (IsFull()) { throw "Стек полный"; }
         else {
             top_i++;
             pMem[top_i] = el;
