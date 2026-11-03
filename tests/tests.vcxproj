@@ -139,12 +139,12 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="gtest.h" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="gtest-all.cc" />
     <ClCompile Include="test_main.cpp" />
-    <ClCompile Include="test_tbitfield.cpp" />
+    <ClCompile Include="test_stack.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="gtest.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

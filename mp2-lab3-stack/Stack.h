@@ -8,6 +8,7 @@ class Stack {
     T* pMem;
 public:
     Stack(int _size = 1) : top_i(-1), size(_size) {
+        if (_size <= 0 || _size > UINT_MAX) throw "некорректный размер";
         pMem = new T[size];
     }
     ~Stack() {
@@ -16,7 +17,7 @@ public:
         delete[] pMem;
     }
 
-    Stack(const Stack& st) {
+    Stack(const Stack& st) noexcept {
         size = st.size;
         top_i = st.top_i;
         pMem = new T[size];
@@ -25,26 +26,24 @@ public:
         }
     }
 
-    Stack(Stack&& st) {
+    Stack(Stack&& st) noexcept{
         size = st.size;
-        pMem = new T[size];
         top_i = st.top_i;
-        for (int i = 0; i <= top_i; i++) {
-            pMem[i] = st.pMem[i];
-        }
+        pMem = st.pMem;
+        st.pMem = nullptr;
+        st.size = 0;
+        st.top_i = -1;
     }
-    
-    Stack<T>& operator=(const Stack <T>& st) {
-        if (&st == this) {
-            if (this->size = st.size) {
-                size = st.size;
-                delete[] pMem;
-                pMem = new T[size];
-            }
+
+
+    Stack<T>& operator=(const Stack<T>& st) {
+        if (this != &st) { 
+            T* newMem = new T[st.size];
+            for (int i = 0; i <= st.top_i; i++) newMem[i] = st.pMem[i];
+            delete[] pMem;
+            pMem = newMem;
+            size = st.size;
             top_i = st.top_i;
-            for (int i = 0; i < top_i; i++) {
-                pMem[i] = st.pMem[i];
-            }
         }
         return *this;
     }
@@ -62,7 +61,7 @@ public:
         return *this;
     }
 
-    bool operator==(const Stack <T>& st) {
+    bool operator==(const Stack <T>& st) const {
         if (size != st.size) return false;
         if (top_i != st.top_i) return false;
         for (int i = 0; i <= top_i; i++) {
@@ -75,10 +74,10 @@ public:
         return !(*this == st);
     }
 
-    bool IsFull() {
+    bool IsFull() const {
         return top_i == size - 1;
     }
-    bool IsEmpty() {
+    bool IsEmpty() const {
         return top_i == -1;
     }
 
@@ -103,7 +102,8 @@ public:
         }
     }
 
-    T Top() {
+    T top() const {
+        if (IsEmpty()) throw "Стек пуст";
         return pMem[top_i];
     }
 };

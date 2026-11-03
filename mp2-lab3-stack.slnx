@@ -4,5 +4,5 @@
     <Platform Name="x86" />
   </Configurations>
   <Project Path="mp2-lab3-stack/mp2-lab3-stack.vcxproj" Id="3735dd69-234e-4925-b1c1-d851c3a702d8" />
-  <Project Path="tests/tests.vcxproj" Id="5348d728-c25f-4354-b5c2-e21fc48168a1" />
+  <Project Path="StackTest/StackTest.vcxproj" Id="b2028386-c45e-4258-b82a-a8c4f3701d10" />
 </Solution>
