@@ -16,37 +16,42 @@ class Calculator
     {
         inf_cont.clear();
         int i = 0;
-        while (i < infix.size)
+        Token t;
+        while (i < infix.size())
         {
             if (infix[i] == '(')
             {
                 Token t;
-                t.type = OperBr;
-                s.str = "(";
-                inf_cont.pus_hback(t);
+                t.type = OpenBr;
+                t.str = "(";
+                inf_cont.push_back(t);
             }
-            if (infix[i] >= '0' && infix[i] <= '9' && infix[i] == '.')
+            if ((infix[i] >= '0' && infix[i] <= '9') || infix[i] == '.')
             {
                 char* p;
                 double val = strtod(&infix[i], &p);
-                Token t;
                 t.val = val;
                 t.type = Number;
-                t.str =//подстрока
-                    inf_cont.push_back(t);
-                int dalta = p - &infix[i];
-                i += delta;
+                int delta = p - &infix[i];
+                t.str = infix.substr(i, delta);
+                inf_cont.push_back(t);
+                i += delta-1;
             }
+            if (infix[i] == '+' || infix[i] == '-' || infix[i] == '*' || infix[i] == '/') {
+                t.type = Operat;
+                t.str = infix[i];
+                inf_cont.push_back(t);
+            }
+            i++;
         }
-        i++;
     }
 public:
     Calculator()
     {
         infix = "";
         postfix = "";
-        inf_count.clear();
-        post_count.clear();
+        inf_cont.clear();
+        post_cont.clear();
     }
 
     

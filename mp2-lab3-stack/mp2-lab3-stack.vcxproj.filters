@@ -29,10 +29,10 @@
     <ClInclude Include="calculator.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\container\container\container.h">
+    <ClInclude Include="Token.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="Token.h">
+    <ClInclude Include="..\..\container\container\container.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
