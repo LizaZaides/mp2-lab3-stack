@@ -1,5 +1,5 @@
 
-#include "Stack.h"
+#include "..\mp2-lab3-stack\Stack.h"
 #include "gtest.h"
 
 TEST(Stack, can_create_stack_with_positive_length)

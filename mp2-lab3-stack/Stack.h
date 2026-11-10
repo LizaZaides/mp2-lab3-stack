@@ -106,4 +106,7 @@ public:
         if (IsEmpty()) throw "Стек пуст";
         return pMem[top_i];
     }
+    void clear() noexcept {
+        top_i = -1;
+    }
 };
