@@ -27,14 +27,14 @@ TEST(Stack, can_add_element_to_stack) {
     ASSERT_NO_THROW(bf.push(1));
 }
 
-TEST(Stack, cannot_push_to_full_stack)
+/*TEST(Stack, cannot_push_to_full_stack)
 {
     Stack<int> bf(3);
     bf.push(1);
     bf.push(2);
     bf.push(3);
     ASSERT_ANY_THROW(bf.push(4));
-}
+}*/
 
 TEST(Stack, can_get_element_from_stack)
 {

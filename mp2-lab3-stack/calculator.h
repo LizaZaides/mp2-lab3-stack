@@ -7,8 +7,8 @@
 #include <cmath>
 #include "Stack.h"
 
-using std::string;
 
+using std::string;
 
 class Calculator
 {
@@ -48,7 +48,6 @@ class Calculator
                 continue;
             }
 
-
             if ((infix[i] >= '0' && infix[i] <= '9') || infix[i] == '.')
             {
                 char* p;
@@ -68,8 +67,8 @@ class Calculator
         }
         inf_cont.push_back(Token(CloseBr, ")", 0.0, 0));
     }
-public:
 
+public:
 
     Calculator()
     {
@@ -109,21 +108,27 @@ public:
                 while (!oper.IsEmpty() && oper.top().type != OpenBr) {
                     post_cont.push_back(oper.pop());
                 }
-                if (oper.IsEmpty()) {
-                    throw "Error";
+                if (!oper.IsEmpty()) {
+                    oper.pop();
                 }
-                oper.pop();
                 continue;
             }
 
             if (inf_cont[i].type == Operat) {
-                while (!oper.IsEmpty() && oper.top().type == Operat &&Priority(inf_cont[i]) <= Priority(oper.top())) {
+                while (!oper.IsEmpty() && oper.top().type == Operat && Priority(inf_cont[i]) <= Priority(oper.top())) {
                     post_cont.push_back(oper.pop());
                 }
                 oper.push(inf_cont[i]);
                 continue;
             }
         }
+        while (!oper.IsEmpty()) {
+            if (oper.top().type == OpenBr) {
+                throw "Error";
+            }
+            post_cont.push_back(oper.pop());
+        }
+
         if (post_cont.get_count() > 0) {
             postfix += post_cont[0].str;
             for (int i = 1; i < post_cont.get_count(); i++) {
@@ -142,11 +147,11 @@ public:
             if (post_cont[i].type == Operat) {
                 double right, left, res = 0;
                 if (num.IsEmpty()) {
-                    throw "Error"; 
+                    throw "Error";
                 }
                 right = num.pop();
                 if (num.IsEmpty()) {
-                    throw "Error"; 
+                    throw "Error";
                 }
                 left = num.pop();
                 if (post_cont[i].str == "+") {
@@ -160,7 +165,7 @@ public:
                 }
                 else if (post_cont[i].str == "/") {
                     if (right == 0) {
-                        throw "Error"; 
+                        throw "Error";
                     }
                     res = left / right;
                 }
@@ -180,5 +185,6 @@ public:
         }
         return ans;
     }
+
     string get_postfix() const { return postfix; }
 };

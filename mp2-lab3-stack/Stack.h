@@ -6,6 +6,17 @@ class Stack {
     static constexpr unsigned int maxValue = UINT_MAX;
     int top_i, size;
     T* pMem;
+
+    void resize() {
+        int new_size = (size == 0) ? 1 : size * 2;
+        T* new_pMem = new T[new_size];
+        for (int i = 0; i <= top_i; i++) {
+            new_pMem[i] = pMem[i];
+        }
+        delete[] pMem;
+        pMem = new_pMem;
+        size = new_size;
+    }
 public:
     Stack(int _size = 1) : top_i(-1), size(_size) {
         if (_size <= 0 || _size > UINT_MAX) throw "некорректный размер";
@@ -86,12 +97,11 @@ public:
     }
 
 
-    void push(T el) {
-        if (IsFull()) { throw "Стек полный"; }
-        else {
-            top_i++;
-            pMem[top_i] = el;
+    void push(const T& el) {
+        if (IsFull()) {
+            resize();
         }
+        pMem[++top_i] = el; 
     }
 
     T pop() {
