@@ -122,7 +122,6 @@ public:
     void clear() noexcept {
         count = 0;
     }
-
     int get_count() const { return count; }
     int get_size() const { return size; }
 };
