@@ -108,6 +108,9 @@ public:
                 while (!oper.IsEmpty() && oper.top().type != OpenBr) {
                     post_cont.push_back(oper.pop());
                 }
+                if (oper.IsEmpty()) {
+                    throw "Error";
+                }
                 if (!oper.IsEmpty()) {
                     oper.pop();
                 }
