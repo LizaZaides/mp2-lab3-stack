@@ -117,3 +117,21 @@ TEST(Stack, self_assignment_is_safe) {
     ASSERT_EQ(bf.pop(), 10);
 }
 
+TEST(Stack, move_assignment_empties_source) {
+    Stack<int> st1(5);
+    st1.push(10);
+    Stack<int> st2(5);
+    st2 = std::move(st1);
+    ASSERT_EQ(st2.pop(), 10);
+    ASSERT_TRUE(st1.IsEmpty());
+}
+
+TEST(Stack, move_constructor_empties_source) {
+    Stack<int> st1(5);
+    st1.push(1);
+    st1.push(2);
+    Stack<int> st2(std::move(st1));
+    ASSERT_EQ(st2.pop(), 2);
+    ASSERT_EQ(st2.pop(), 1);
+    ASSERT_TRUE(st1.IsEmpty());
+}

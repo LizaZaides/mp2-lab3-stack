@@ -141,6 +141,13 @@ TEST(CalculatorTest, double_subtraction_can_give_negative) {
     ASSERT_EQ(calc.CalcPostfix(), -1.3);
 }
 
+TEST(CalculatorTest, double_dot_in_number_throws) {
+    Calculator calc;
+    calc.set_infix("1.2.3 + 1");
+    ASSERT_ANY_THROW(calc.CalcPostfix());
+}
+
+
 //œŒ—“‘» —Õ¿ﬂ —“–Œ ¿
 
 TEST(CalculatorTest, postfix_string_simple) {
@@ -218,6 +225,13 @@ TEST(CalculatorTest, operator_without_left_operand_throws) {
     ASSERT_ANY_THROW(calc.CalcPostfix());
 }
 
+TEST(CalculatorTest, two_operators_in_a_row_throws) {
+    Calculator calc;
+    calc.set_infix("2 + * 3");
+    calc.to_postfix();
+    ASSERT_ANY_THROW(calc.CalcPostfix());
+}
+
 TEST(CalculatorTest, only_operators_throws) {
     Calculator calc;
     calc.set_infix("+*");
@@ -239,6 +253,13 @@ TEST(CalculatorTest, single_number) {
     ASSERT_EQ(calc.CalcPostfix(), 42.0);
 }
 
+TEST(CalculatorTest, single_number_in_brackets) {
+    Calculator calc;
+    calc.set_infix("(42)");
+    calc.to_postfix();
+    ASSERT_EQ(calc.CalcPostfix(), 42.0);
+}
+
 TEST(CalculatorTest, negative_result_from_subtraction) {
     Calculator calc;
     calc.set_infix("5 - 10");
@@ -251,4 +272,11 @@ TEST(CalculatorTest, very_long_expression) {
     calc.set_infix("(1 + 2 * 3) * (4 - 5 / 2) + 6^2");
     calc.to_postfix();
     ASSERT_EQ(calc.CalcPostfix(), 46.5);
+}
+
+TEST(CalculatorTest, can_handle_big_numbers) {
+    Calculator calc;
+    calc.set_infix("1000000 * 1000000");
+    calc.to_postfix();
+    ASSERT_EQ(calc.CalcPostfix(), 1000000000000.0);
 }

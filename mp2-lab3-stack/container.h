@@ -83,6 +83,7 @@ public:
     Container& Size(int s) {
         if (s <= 0) throw "размер меньше или равен 0";
         if (size != s) {
+            if (count > s) count = s;
             T* pNew = new T[s];
             int min = (size < s) ? size : s;
             for (int i = 0; i < min; i++) {

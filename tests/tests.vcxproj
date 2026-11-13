@@ -141,6 +141,7 @@
   <ItemGroup>
     <ClCompile Include="gtest-all.cc" />
     <ClCompile Include="test_calcul.cpp" />
+    <ClCompile Include="test_container.cpp" />
     <ClCompile Include="test_main.cpp" />
     <ClCompile Include="test_stack.cpp" />
   </ItemGroup>
