@@ -175,6 +175,7 @@ public:
                 else if (post_cont[i].str == "^") {
                     res = pow(left, right);
                 }
+                else { throw "Error"; }
                 num.push(res);
                 continue;
             }

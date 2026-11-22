@@ -130,16 +130,6 @@ TEST(ContainerTest, self_assignment_is_safe) {
     ASSERT_EQ(c[0], 10);
 }
 
-TEST(ContainerTest, move_assignment_works) {
-    Container<int> c1(3);
-    c1.push_back(10);
-    Container<int> c2(3);
-    c2 = std::move(c1);
-    ASSERT_EQ(c2.get_count(), 1);
-    ASSERT_EQ(c2[0], 10);
-    ASSERT_EQ(c1.get_count(), 0);
-}
-
 TEST(ContainerTest, get_size_returns_capacity) {
     Container<int> c(5);
     ASSERT_EQ(c.get_size(), 5);

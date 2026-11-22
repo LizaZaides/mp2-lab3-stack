@@ -246,6 +246,13 @@ TEST(CalculatorTest, big_complex_expression) {
     ASSERT_EQ(calc.CalcPostfix(), 11.0);
 }
 
+TEST(CalculatorTest, big_complex_expression1) {
+    Calculator calc;
+    calc.set_infix("(((3+2)/5)-2)^2");
+    calc.to_postfix();
+    ASSERT_EQ(calc.CalcPostfix(), 1.0);
+}
+
 TEST(CalculatorTest, single_number) {
     Calculator calc;
     calc.set_infix("42");
