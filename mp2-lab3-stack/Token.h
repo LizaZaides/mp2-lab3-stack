@@ -7,7 +7,8 @@ enum TokenType
 	Operat,
 	OpenBr,
 	CloseBr,
-	Function
+	Function,
+	Variable
 };
 
 struct Token

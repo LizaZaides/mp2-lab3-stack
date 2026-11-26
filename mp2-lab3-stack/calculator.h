@@ -76,6 +76,11 @@ class Calculator
                 continue;
             }
 
+            if (c_infix[i] == 'x' || c_infix[i] == 'X') {
+                inf_cont.push_back(Token(Variable, "x", 0.0, 0));
+                i++;
+                continue;
+            }
 
             if ((c_infix[i] >= '0' && c_infix[i] <= '9') || c_infix[i] == '.' ||
                 (c_infix[i] == '-' && (i == 0 || c_infix[i - 1] == '(' || c_infix[i - 1] == '+' || c_infix[i - 1] == '-' || c_infix[i - 1] == '*' || c_infix[i - 1] == '/')))
@@ -101,6 +106,7 @@ class Calculator
     }
 
 public:
+    double x_value = 0.0;
     void set_infix(const string& s) {
         infix = s;
         inf_cont.clear();
@@ -116,6 +122,9 @@ public:
         for (int i = 0; i < inf_cont.get_count();i++) {
             if (inf_cont[i].t_type == OpenBr) {
                 st_oper.push(inf_cont[i]);
+            }
+            else if (inf_cont[i].t_type == Variable) {
+                st_num.push(x_value);
             }
             else if (inf_cont[i].t_type == Number) {
                 st_num.push(inf_cont[i].val);
