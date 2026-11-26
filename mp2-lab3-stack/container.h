@@ -1,7 +1,6 @@
 ﻿#pragma once
 #include <iostream>
 
-using namespace std;
 
 template <typename T>
 class Container {
@@ -96,12 +95,12 @@ public:
         return *this;
     }
 
-    friend ostream& operator<<(ostream& out, const Container& v) {
+    friend std::ostream& operator<<(std::ostream& out, const Container& v) {
         for (int i = 0; i < v.count; i++) out << v.pMem[i] << " ";
         return out;
     }
 
-    friend istream& operator>>(istream& in, Container& v) {
+    friend std::istream& operator>>(std::istream& in, Container& v) {
         for (int i = 0; i < v.count; i++) in >> v.pMem[i];
         return in;
     }

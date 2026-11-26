@@ -7,18 +7,17 @@
 #include <cmath>
 #include "Stack.h"
 
-
 using std::string;
 
 class Calculator
 {
-    string infix, postfix;
-    Container<Token> inf_cont, post_cont;
-    Stack<Token> oper;
-    Stack<double> num;
-
+    string infix;
+    Container<Token> inf_cont;
+    Stack<Token> st_oper;
+    Stack<double> st_num;
     int Priority(const Token& t) const {
-        if (t.type != Operat) return 0;
+        if (t.t_type == Function) return 4;
+        if (t.t_type != Operat) return 0;
         if (t.str == "+" || t.str == "-") return 1;
         if (t.str == "*" || t.str == "/") return 2;
         if (t.str == "^") return 3;
@@ -28,167 +27,205 @@ class Calculator
     void infix_to_cont()
     {
         inf_cont.clear();
+        //пробелы убрать для strtod
+        string c_infix = "";
+        for (int i = 0; i < infix.length(); i++) {
+            char c = infix[i];
+            if (c != ' ') c_infix += c;
+        }
         inf_cont.push_back(Token(OpenBr, "(", 0.0, 0));
 
         int i = 0;
-        while (i < infix.size())
+        while (i < c_infix.size())
         {
-            if (infix[i] == ' ') {
+            /*if (infix[i] == ' ') {
                 i++;
                 continue;
-            }
-            if (infix[i] == '(') {
+            }*/
+
+            if (c_infix.empty()) throw "error";
+            if (c_infix[i] == '(') {
                 inf_cont.push_back(Token(OpenBr, "(", 0.0, 0));
                 i++;
                 continue;
             }
-            if (infix[i] == ')') {
+            if (c_infix[i] == ')') {
                 inf_cont.push_back(Token(CloseBr, ")", 0.0, 0));
                 i++;
                 continue;
             }
 
-            if ((infix[i] >= '0' && infix[i] <= '9') || infix[i] == '.')
+            if (c_infix.substr(i, 3) == "sin") {
+                inf_cont.push_back(Token(Function, "sin", 0.0, 4));
+                i += 3;
+                continue;
+            }
+            if (c_infix.substr(i, 3) == "cos") {
+                inf_cont.push_back(Token(Function, "cos", 0.0, 4));
+                i += 3;
+                continue;
+            }
+            if (c_infix.substr(i, 3) == "exp") {
+                inf_cont.push_back(Token(Function, "exp", 0.0, 4));
+                i += 3;
+                continue;
+            }
+            if (c_infix.substr(i, 2) == "ln") {
+                inf_cont.push_back(Token(Function, "ln", 0.0, 4));
+                i += 2;
+                continue;
+            }
+
+
+            if ((c_infix[i] >= '0' && c_infix[i] <= '9') || c_infix[i] == '.' ||
+                (c_infix[i] == '-' && (i == 0 || c_infix[i - 1] == '(' || c_infix[i - 1] == '+' || c_infix[i - 1] == '-' || c_infix[i - 1] == '*' || c_infix[i - 1] == '/')))
             {
                 char* p;
-                double val = strtod(&infix[i], &p);
-                int delta = p - &infix[i];
-                inf_cont.push_back(Token(Number, infix.substr(i, delta), val, 0));
+                double val = strtod(&c_infix[i], &p);
+                int delta = p - &c_infix[i];
+                if (c_infix[i + delta] == '.') throw "error";
+                inf_cont.push_back(Token(Number, c_infix.substr(i, delta), val, 0));
                 i += delta;
                 continue;
             }
-            if (infix[i] == '+' || infix[i] == '-' || infix[i] == '*' || infix[i] == '/' || infix[i] == '^') {
-                Token t(Operat, string(1, infix[i]));
+            if (c_infix[i] == '+' || c_infix[i] == '-' || c_infix[i] == '*' || c_infix[i] == '/' || c_infix[i] == '^') {
+                Token t(Operat, string(1, c_infix[i]));
                 t.priority = Priority(t);
                 inf_cont.push_back(t);
                 i++;
                 continue;
             }
+            throw "error";
         }
         inf_cont.push_back(Token(CloseBr, ")", 0.0, 0));
     }
 
 public:
-
-    Calculator()
-    {
-        infix = "";
-        postfix = "";
-        inf_cont.clear();
-        post_cont.clear();
-    }
-
     void set_infix(const string& s) {
         infix = s;
-        postfix = "";
         inf_cont.clear();
-        post_cont.clear();
         if (!infix.empty()) {
             infix_to_cont();
         }
     }
 
-    void to_postfix() {
-        oper.clear();
-        post_cont.clear();
-        postfix = "";
-        for (int i = 0; i < inf_cont.get_count(); i++) {
+    double Calc() {
+        st_oper.clear();
+        st_num.clear();
 
-            if (inf_cont[i].type == OpenBr) {
-                oper.push(inf_cont[i]);
-                continue;
+        for (int i = 0; i < inf_cont.get_count();i++) {
+            if (inf_cont[i].t_type == OpenBr) {
+                st_oper.push(inf_cont[i]);
             }
-
-            if (inf_cont[i].type == Number) {
-                post_cont.push_back(inf_cont[i]);
-                continue;
+            else if (inf_cont[i].t_type == Number) {
+                st_num.push(inf_cont[i].val);
             }
 
-            if (inf_cont[i].type == CloseBr) {
-                while (!oper.IsEmpty() && oper.top().type != OpenBr) {
-                    post_cont.push_back(oper.pop());
-                }
-                if (oper.IsEmpty()) {
-                    throw "Error";
-                }
-                if (!oper.IsEmpty()) {
-                    oper.pop();
-                }
-                continue;
+            else if (inf_cont[i].t_type == Function) {
+                st_oper.push(inf_cont[i]);
             }
 
-            if (inf_cont[i].type == Operat) {
-                while (!oper.IsEmpty() && oper.top().type == Operat && Priority(inf_cont[i]) <= Priority(oper.top())) {
-                    post_cont.push_back(oper.pop());
-                }
-                oper.push(inf_cont[i]);
-                continue;
-            }
-        }
-        while (!oper.IsEmpty()) {
-            if (oper.top().type == OpenBr) {
-                throw "Error";
-            }
-            post_cont.push_back(oper.pop());
-        }
-
-        if (post_cont.get_count() > 0) {
-            postfix += post_cont[0].str;
-            for (int i = 1; i < post_cont.get_count(); i++) {
-                postfix += " " + post_cont[i].str;
-            }
-        }
-    }
-
-    double CalcPostfix() {
-        num.clear();
-        for (int i = 0; i < post_cont.get_count(); i++) {
-            if (post_cont[i].type == Number) {
-                num.push(post_cont[i].val);
-                continue;
-            }
-            if (post_cont[i].type == Operat) {
-                double right, left, res = 0;
-                if (num.IsEmpty()) {
-                    throw "Error";
-                }
-                right = num.pop();
-                if (num.IsEmpty()) {
-                    throw "Error";
-                }
-                left = num.pop();
-                if (post_cont[i].str == "+") {
-                    res = left + right;
-                }
-                else if (post_cont[i].str == "-") {
-                    res = left - right;
-                }
-                else if (post_cont[i].str == "*") {
-                    res = left * right;
-                }
-                else if (post_cont[i].str == "/") {
-                    if (right == 0) {
-                        throw "Error";
+            else if (inf_cont[i].t_type == CloseBr) {
+                while (!st_oper.IsEmpty() && st_oper.top().t_type != OpenBr) {
+                    double op2 = st_num.pop(), op1 = st_num.pop();
+                    double tmp = 0;
+                    string op = st_oper.pop().str;
+                    if (op == "+") tmp = op1 + op2;
+                    else if (op == "-") tmp = op1 - op2;
+                    else if (op == "*") tmp = op1 * op2;
+                    else if (op == "/") {
+                        if (op2 == 0) throw "error";
+                        tmp = op1 / op2;
                     }
-                    res = left / right;
+                    else if (op == "^") tmp = pow(op1, op2);
+                    st_num.push(tmp);
                 }
-                else if (post_cont[i].str == "^") {
-                    res = pow(left, right);
+                if (st_oper.IsEmpty()) throw "error";
+
+                if (!st_oper.IsEmpty()) {
+                    st_oper.pop();
                 }
-                else { throw "Error"; }
-                num.push(res);
-                continue;
+
+                if (!st_oper.IsEmpty() && st_oper.top().t_type == Function) {
+                    double v = st_num.pop();
+                    string f = st_oper.pop().str;
+                    double res = 0;
+                    if (f == "sin") res = sin(v);
+                    else if (f == "cos") res = cos(v);
+                    else if (f == "exp") res = exp(v);
+                    else if (f == "ln") { 
+                        if (v <= 0) throw "error";
+                        res = log(v); 
+                    }
+                    st_num.push(res);
+                }
+                
+            }
+            else if (inf_cont[i].t_type == Operat) {
+                while (!st_oper.IsEmpty() && st_oper.top().t_type == Operat &&
+                    Priority(st_oper.top()) >= inf_cont[i].priority) {
+
+
+                    double op2 = st_num.pop();
+                    double op1 = st_num.pop();
+                    double tmp = 0;
+                    string op = st_oper.pop().str;
+
+                    if (op == "+") tmp = op1 + op2;
+                    else if (op == "-") tmp = op1 - op2;
+                    else if (op == "*") tmp = op1 * op2;
+                    else if (op == "/") {
+                        if (op2 == 0) throw "error";
+                        tmp = op1 / op2;
+                    }
+                    else if (op == "^") tmp = pow(op1, op2);
+
+                    st_num.push(tmp);
+                }
+                st_oper.push(inf_cont[i]);
             }
         }
-        if (num.IsEmpty()) {
-            throw "Error";
+        while (!st_oper.IsEmpty()) {
+            if (st_oper.top().t_type == OpenBr) throw "error";
+            if (st_num.IsEmpty()) throw "error";
+            double op2 = st_num.pop();
+            if (st_num.IsEmpty()) throw "error";
+            double op1 = st_num.pop();
+
+            double tmp = 0;
+            string op = st_oper.pop().str;
+            if (op == "+") tmp = op1 + op2;
+            else if (op == "-") tmp = op1 - op2;
+            else if (op == "*") tmp = op1 * op2;
+            else if (op == "/") {
+                if (op2 == 0) throw "error";
+                tmp = op1 / op2;
+            }
+            else if (op == "^") tmp = pow(op1, op2);
+            st_num.push(tmp);
         }
-        double ans = num.pop();
-        if (!num.IsEmpty()) {
-            throw "Error";
-        }
-        return ans;
+
+
+        if (st_num.IsEmpty()) throw "error";
+        double result = st_num.pop();
+        if (!st_num.IsEmpty()) throw "error";
+        return result;
     }
 
-    string get_postfix() const { return postfix; }
+
+    string getInfix() const {
+        return infix;
+    }
+
+    friend std::ostream& operator<<(std::ostream& os, const Calculator& c) {
+        os << c.infix;
+        return os;
+    }
+    friend std::istream& operator>>(std::istream& is, Calculator& c) {
+        string s;
+        getline(is, s);
+        c.set_infix(s);
+        return is;
+    }
+
 };

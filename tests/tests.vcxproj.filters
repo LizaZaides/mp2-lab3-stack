@@ -24,10 +24,10 @@
     <ClCompile Include="gtest-all.cc">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="test_calcul.cpp">
+    <ClCompile Include="test_container.cpp">
       <Filter>Файлы ресурсов</Filter>
     </ClCompile>
-    <ClCompile Include="test_container.cpp">
+    <ClCompile Include="test_calcul.cpp">
       <Filter>Файлы ресурсов</Filter>
     </ClCompile>
   </ItemGroup>
